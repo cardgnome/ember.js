@@ -122,10 +122,8 @@ test("appendChild should work inside a template", function() {
      "The appended child is visible");
 });
 
-test("rerender should work inside a template", function() {
-  try {
-    Ember.TESTING_DEPRECATION = true;
-
+test("rerender should throw inside a template", function() {
+  raises(function() {
     Ember.run(function() {
       var renderCount = 0;
       view = Ember.View.create({
@@ -150,14 +148,7 @@ test("rerender should work inside a template", function() {
 
       view.appendTo("#qunit-fixture");
     });
-  } finally {
-    Ember.TESTING_DEPRECATION = false;
-  }
-
-  equal(view.$('div:nth-child(1)').length, 1);
-  equal(view.$('div:nth-child(1)').text(), '2');
-  equal(view.$('div:nth-child(2)').length, 1);
-  equal(view.$('div:nth-child(2)').text(), 'Inside child2');
+  }, /You cannot rerender while in the inBuffer state/);
 });
 
 module("views/view/view_lifecycle_test - in DOM", {

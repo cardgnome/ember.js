@@ -67,14 +67,11 @@
 
     equal(outer.get('middle.childViews.length'), 2, 'precond middle has 2 child views rendered to buffer');
 
-    try {
-      Ember.TESTING_DEPRECATION = true;
+    raises(function() {
       Ember.run(function() {
         outer.middle.rerender();
       });
-    } finally {
-      Ember.TESTING_DEPRECATION = false;
-    }
+    }, /You cannot rerender while in the inBuffer state/);
 
     equal(outer.get('middle.childViews.length'), 2, 'middle has 2 child views rendered to buffer');
 

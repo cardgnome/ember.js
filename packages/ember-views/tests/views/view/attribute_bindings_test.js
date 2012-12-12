@@ -102,7 +102,7 @@ test("should update attribute bindings", function() {
   ok(!view.$().attr('notNumber'), "removes notNumber attribute when NaN");
 });
 
-test("should allow attributes to be set in the inBuffer state", function() {
+test("should throw if attributes are changed in the inBuffer state", function() {
   var parentView, childViews, Test;
   Ember.run(function() {
     lookup.Test = Test = Ember.Namespace.create();
@@ -136,17 +136,11 @@ test("should allow attributes to be set in the inBuffer state", function() {
     }));
   });
 
-  try {
-    Ember.TESTING_DEPRECATION = true;
-
+  raises(function() {
     Ember.run(function() {
       parentView.append();
     });
-  } finally {
-    Ember.TESTING_DEPRECATION = false;
-  }
-
-  equal(parentView.get('childViews')[0].$().attr('foo'), 'baz');
+  }, /You cannot rerender while in the inBuffer state/);
 
   Ember.run(function(){
     parentView.destroy();
